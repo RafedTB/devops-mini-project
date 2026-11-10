@@ -22,5 +22,7 @@
     "strictBindCallApply": false,
     "types": ["node", "jest"],
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*", "db/**/*"],
+  "exclude": ["node_modules", "dist", "frontend"]
 }

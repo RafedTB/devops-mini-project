@@ -4,8 +4,9 @@ import { Repository } from "typeorm";
 import { User } from "./user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LoginDto } from "./dto/login.dto";
-import { JWTPayloadType,accessTokenType} from "../utils/types";
+import { JWTPayloadType } from "../utils/types";
 import { UpdateUserDto } from "./dto/update-user.dto";
+import { UserType } from "../utils/enum";
 import { AuthProvider } from "./auth.provider";
 import {join} from "node:path";
 import {unlinkSync} from "node:fs";
@@ -84,7 +85,7 @@ export class usersService {
      */
     public async deleteUser(userid: number,payload: JWTPayloadType) {
         const user = await this.getCurrentUser(userid);
-        if(user.id === payload?.id ||payload.userType === 'ADMIN'){
+        if(user.id === payload?.id || payload.userType === UserType.ADMIN){
             await this.userRepository.remove(user);
             return {message: 'User deleted successfully'};
         }

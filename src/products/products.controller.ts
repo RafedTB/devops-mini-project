@@ -42,7 +42,6 @@ export class ProductsController {
         return this.productsService.getAll(name, minPrice, maxPrice);
     }
     @Get(":id")
-    @Throttle({default: {ttl: 60000, limit: 5}})
     public getProductById(@Param("id", ParseIntPipe) id: number) {
         return this.productsService.getOneBy(id);
     }

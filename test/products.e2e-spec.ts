@@ -7,6 +7,7 @@ import {Product} from "../src/products/product.entity";
 import { CreateProductDto } from '../src/products/dto/create-product.dto';
 import { User } from '../src/users/user.entity';
 import { UserType } from '../src/utils/enum';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import * as bcrypt from 'bcryptjs';
 
 
@@ -39,7 +40,10 @@ describe('ProductsController (e2e)', () => {
         ];
         const module:TestingModule = await Test.createTestingModule({
             imports: [AppModule]
-        }).compile();
+        })
+            .overrideGuard(ThrottlerGuard)
+            .useValue({ canActivate: () => true })
+            .compile();
 
         app=module.createNestApplication();
         await app.init();

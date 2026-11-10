@@ -1,4 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+  "include": ["src/**/*", "db/data-source.ts"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "frontend", "db/view-db.ts"]
 }
+
