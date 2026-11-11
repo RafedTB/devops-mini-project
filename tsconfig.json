@@ -23,6 +23,6 @@
     "types": ["node", "jest"],
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*", "db/**/*"],
+  "include": ["src/**/*", "db/**/*", "test/**/*"],
   "exclude": ["node_modules", "dist", "frontend"]
 }

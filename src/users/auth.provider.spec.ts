@@ -30,20 +30,20 @@ describe('AuthProvider', () => {
         {
           provide: MailService,
           useValue: {
-            sendVerificationMail: jest.fn()
+            sendVerificationMail: jest.fn(),
           },
         },
         {
           provide: ConfigService,
           useValue: {
-            get: jest.fn()
+            get: jest.fn(),
           },
         },
         {
           provide: REPOSITORY_TOKEN,
           useValue: {
             findOne: jest.fn(),
-            create: jest.fn((dto:typeof RegisterDto) => Promise.resolve(dto)),
+            create: jest.fn((dto: typeof RegisterDto) => Promise.resolve(dto)),
             save: jest.fn((user: User) => Promise.resolve({ ...user, id: 1 })),
           },
         },
@@ -66,29 +66,29 @@ describe('AuthProvider', () => {
 
   describe('register', () => {
     it('should call findOne', async () => {
-        await authProvider.register(RegisterDto);
-        expect(userRepository.findOne).toHaveBeenCalled();
-        expect(userRepository.findOne).toHaveBeenCalledTimes(1);      
+      await authProvider.register(RegisterDto);
+      expect(userRepository.findOne).toHaveBeenCalled();
+      expect(userRepository.findOne).toHaveBeenCalledTimes(1);
     });
     it('should call create method in userRepository', async () => {
-        await authProvider.register(RegisterDto);
-        expect(userRepository.create).toHaveBeenCalled();
-        expect(userRepository.create).toHaveBeenCalledTimes(1);      
+      await authProvider.register(RegisterDto);
+      expect(userRepository.create).toHaveBeenCalled();
+      expect(userRepository.create).toHaveBeenCalledTimes(1);
     });
     it('should save the created user', async () => {
-        await authProvider.register(RegisterDto);
-        expect(userRepository.save).toHaveBeenCalled();
-        expect(userRepository.save).toHaveBeenCalledTimes(1);      
+      await authProvider.register(RegisterDto);
+      expect(userRepository.save).toHaveBeenCalled();
+      expect(userRepository.save).toHaveBeenCalledTimes(1);
     });
     it('should call sendVerificationMail', async () => {
-        await authProvider.register(RegisterDto);
-        expect(mailService.sendVerificationMail).toHaveBeenCalled();
-        expect(mailService.sendVerificationMail).toHaveBeenCalledTimes(1);
+      await authProvider.register(RegisterDto);
+      expect(mailService.sendVerificationMail).toHaveBeenCalled();
+      expect(mailService.sendVerificationMail).toHaveBeenCalledTimes(1);
     });
-    it("should call configService.get", async () => {
-        await authProvider.register(RegisterDto);
-        expect(configService.get).toHaveBeenCalled();
-        expect(configService.get).toHaveBeenCalledTimes(1);
-    })
-})
-})
+    it('should call configService.get', async () => {
+      await authProvider.register(RegisterDto);
+      expect(configService.get).toHaveBeenCalled();
+      expect(configService.get).toHaveBeenCalledTimes(1);
+    });
+  });
+});

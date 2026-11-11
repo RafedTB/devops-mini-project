@@ -1,21 +1,59 @@
 services:
-  postgres:
+  db:
     image: postgres:16-alpine
     container_name: nestlearn-postgres
     restart: always
     environment:
-      POSTGRES_USER: ${DB_USERNAME:-postgres}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
-      POSTGRES_DB: ${DATABASE:-nestlearn}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: nestlearn
     ports:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres -d nestlearn"]
+      interval: 3s
       timeout: 5s
       retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nestlearn-backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=admin
+      - DATABASE=nestlearn
+      - DB_DATABASE=nestlearn
+      - JWT_SECRET=${JWT_SECRET:-supersecretdevjwtkey123456789!}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-1d}
+      - SMTP_HOST=${SMTP_HOST:-sandbox.smtp.mailtrap.io}
+      - SMTP_PORT=${SMTP_PORT:-2525}
+      - SMTP_USERNAME=${SMTP_USERNAME:-9ac315f1fad08d}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-f4c478737ec1da}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nestlearn-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -27,8 +65,7 @@ services:
     ports:
       - "5050:80"
     depends_on:
-      - postgres
-
+      - db
 
 volumes:
   pgdata:

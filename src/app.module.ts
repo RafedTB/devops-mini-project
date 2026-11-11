@@ -1,12 +1,18 @@
-import { ClassSerializerInterceptor, MiddlewareConsumer, Module ,NestModule,RequestMethod} from '@nestjs/common';
-import {ProductsModule} from './products/products.module';
-import {UsersModule} from './users/users.module';
-import {ReviewsModule} from './reviews/reviews.module';
-import {FavoritesModule} from './favorites/favorites.module';
-import {OrdersModule} from './orders/orders.module';
+import {
+  ClassSerializerInterceptor,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
+import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { OrdersModule } from './orders/orders.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './products/product.entity';
-import { ConfigModule,ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Review } from './reviews/review.entity';
 import { User } from './users/user.entity';
 import { Favorite } from './favorites/favorite.entity';
@@ -16,7 +22,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { UploadsModule } from './uploads/uploads.module';
 import { MailModule } from './mail/mail.module';
 import { LoogerMiddleware } from './utils/middlewares/logger.middleware';
-import {ThrottlerModule,ThrottlerGuard} from '@nestjs/throttler';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AppController } from './app.controller';
 @Module({
   controllers: [AppController],
@@ -43,7 +49,7 @@ import { AppController } from './app.controller';
         name: 'long',
         ttl: 60000,
         limit: 300,
-      }
+      },
     ]),
     ProductsModule,
     UsersModule,
@@ -81,15 +87,17 @@ import { AppController } from './app.controller';
     }),
   ],
   providers: [
-    {provide:APP_INTERCEPTOR,useClass:ClassSerializerInterceptor},
+    { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard
-    }
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoogerMiddleware).forRoutes({path:'api/products',method:RequestMethod.GET});
+    consumer
+      .apply(LoogerMiddleware)
+      .forRoutes({ path: 'api/products', method: RequestMethod.GET });
   }
 }
