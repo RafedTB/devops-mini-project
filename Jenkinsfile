@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     tools {
-        nodejs 'NodeJS24' // We will configure this name in Jenkins next
+        nodejs 'NodeJS24' 
     }
     
     stages {
