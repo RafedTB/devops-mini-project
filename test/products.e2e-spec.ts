@@ -55,13 +55,13 @@ describe('ProductsController (e2e)', () => {
         await dataSource.createQueryBuilder().insert().into(User).values({ username: "admin" ,email: "admin@example.com", password: hash,userType:UserType.ADMIN,isAccountVerified:true }).execute();
     });
     afterEach(async () => {
-    await dataSource.createQueryBuilder().delete().from(Product).execute();
-    await dataSource.createQueryBuilder().delete().from(User).execute();
-});
+        await dataSource.createQueryBuilder().delete().from(Product).execute();
+    });
 
-afterAll(async () => {
-    await app.close();
-});
+    afterAll(async () => {
+        await dataSource.createQueryBuilder().delete().from(User).execute();
+        await app.close();
+    });
 
 
 
