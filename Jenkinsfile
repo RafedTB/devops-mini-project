@@ -12,9 +12,25 @@ pipeline {
             }
         }
         
-        stage('Build Backend (NestJS)') {
+        stage('Quality & Linting') {
             steps {
                 sh 'npm ci'
+                sh 'npm run lint'
+                dir('frontend') {
+                    sh 'npm install'
+                    sh 'npm run lint'
+                }
+            }
+        }
+        
+        stage('Testing') {
+            steps {
+                sh 'npm run test'
+            }
+        }
+        
+        stage('Build Backend (NestJS)') {
+            steps {
                 sh 'npm run build'
             }
         }
@@ -22,7 +38,6 @@ pipeline {
         stage('Build Frontend (React Vite)') {
             steps {
                 dir('frontend') {
-                    sh 'npm install'
                     sh 'npm run build'
                 }
             }
