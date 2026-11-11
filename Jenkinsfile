@@ -59,6 +59,13 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/**, frontend/dist/**', allowEmptyArchive: false
             }
         }
+        
+        stage('Deploy Application') {
+            steps {
+                // Jenkins will now launch your containers automatically!
+                sh 'docker compose up -d --build'
+            }
+        }
     }
     
     post {
