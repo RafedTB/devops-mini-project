@@ -4,6 +4,23 @@ A full-stack, enterprise-grade web application built to fulfill all DevOps and S
 
 ---
 
+## Git Workflow
+
+This project follows a simplified GitFlow branching model.
+
+| Branch | Role |
+|---|---|
+| `main` | Protected production branch — merged via PR only |
+| `develop` | Integration branch — all features merge here first |
+| `feature/*`, `fix/*`, `docs/*`, `hotfix/*` | Short-lived topic branches |
+
+Flow: `topic branch` → PR → `develop` → PR → `main`
+
+- 📖 [Branching strategy & diagram](docs/GIT_STRATEGY.md)
+- 📖 [Commit conventions & contribution guide](CONTRIBUTING.md)
+
+---
+
 ## Project Requirements Checklist
 
 | Lot / Requirement | Implementation Details | Status |
