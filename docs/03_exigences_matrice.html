@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 3 : Exigences & Matrice de Traçabilité - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 03 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="02_plan_de_test.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="04_catalogue_tests.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Banner -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 03 / 10</span>
+    <h1>Étape 3 : Exigences & Matrice de Traçabilité</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- Speech box -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Formalisation des exigences fonctionnelles et sécuritaires sous forme de critères d'acceptation Given-When-Then (Gherkin). Établissement de la matrice de traçabilité garantissant une couverture intégrale des risques identifiés à l'étape 1.
+    </div>
+  </div>
+
+  <!-- 1. Clarification des Ambiguïtés -->
+  <div class="card">
+    <h2>1. Analyse de Testabilité et Ambiguïtés Levées</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>Peut-on mettre une note de 3.5 ?</strong>
+        <p><strong>NON.</strong> Seuls les entiers stricts (1, 2, 3, 4, 5) sont acceptés.</p>
+      </div>
+      <div class="box">
+        <strong>Un produit peut-il coûter 0€ ?</strong>
+        <p><strong>OUI.</strong> Le prix doit être &ge; 0 (un cadeau ou échantillon est possible, mais pas -10€).</p>
+      </div>
+      <div class="box">
+        <strong>Peut-on modifier l'avis d'un autre client ?</strong>
+        <p><strong>NON.</strong> Seul l'auteur de l'avis ou l'admin a ce droit (sécurité RBAC).</p>
+      </div>
+      <div class="box">
+        <strong>Combien de caractères pour le mot de passe ?</strong>
+        <p><strong>Entre 6 et 50 caractères.</strong> En dessous de 6, le compte est refusé.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Critères d'Acceptation Given-When-Then -->
+  <div class="card">
+    <h2>2. Critères d'Acceptation Formels (Given – When – Then)</h2>
+    <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 1rem;">
+      Chaque fonctionnalité est testée avec une formule universelle : <strong>Étant donné (Given)</strong> &rarr; <strong>Quand (When)</strong> &rarr; <strong>Alors (Then)</strong>.
+    </p>
+
+    <!-- EX-01 -->
+    <div class="scenario-card">
+      <h3><span>EX-01 : Inscription d'un Utilisateur</span> <span class="tag-badge tag-pos">Test Positif</span></h3>
+      <div class="step-line"><span class="pill-given">GIVEN</span> Un visiteur fournit un email non utilisé et un mot de passe de 8 caractères.</div>
+      <div class="step-line"><span class="pill-when">WHEN</span> Il clique sur le bouton "Créer mon compte".</div>
+      <div class="step-line"><span class="pill-then">THEN</span> Le compte est créé avec succès (HTTP 201) et le mot de passe est crypté en base.</div>
+    </div>
+
+    <!-- EX-02 -->
+    <div class="scenario-card">
+      <h3><span>EX-02 : Sécurité des Droits (RBAC)</span> <span class="tag-badge tag-neg">Test Négatif</span></h3>
+      <div class="step-line"><span class="pill-given">GIVEN</span> Un utilisateur ordinaire connecté avec le rôle <code>user</code>.</div>
+      <div class="step-line"><span class="pill-when">WHEN</span> Il tente d'appeler l'API de création d'un produit (réservée à l'admin).</div>
+      <div class="step-line"><span class="pill-then">THEN</span> Le serveur refuse immédiatement avec une erreur <strong>HTTP 403 Forbidden</strong>.</div>
+    </div>
+
+    <!-- EX-03 -->
+    <div class="scenario-card">
+      <h3><span>EX-03 : Validation du Prix</span> <span class="tag-badge tag-neg">Valeur Limite</span></h3>
+      <div class="step-line"><span class="pill-given">GIVEN</span> Un administrateur qui essaie d'ajouter un produit avec un prix négatif de <code>-15€</code>.</div>
+      <div class="step-line"><span class="pill-when">WHEN</span> Il valide le formulaire.</div>
+      <div class="step-line"><span class="pill-then">THEN</span> Le backend bloque la requête avec une erreur <strong>HTTP 400 Bad Request</strong>.</div>
+    </div>
+
+    <!-- EX-04 -->
+    <div class="scenario-card">
+      <h3><span>EX-04 : Note d'Avis Produit</span> <span class="tag-badge tag-pos">Règle Métier</span></h3>
+      <div class="step-line"><span class="pill-given">GIVEN</span> Un client connecté sur la page d'un produit acheté.</div>
+      <div class="step-line"><span class="pill-when">WHEN</span> Il sélectionne 5 étoiles et écrit "Très satisfait".</div>
+      <div class="step-line"><span class="pill-then">THEN</span> L'avis est enregistré et la note moyenne du produit est recalculée.</div>
+    </div>
+  </div>
+
+  <!-- 3. Matrice de Traçabilité -->
+  <div class="card">
+    <h2>3. Matrice de Traçabilité (Exigences &harr; Risques &harr; Tests)</h2>
+    <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 0.8rem;">
+      Cette matrice prouve qu'aucune exigence n'est oubliée et que chaque test correspond à un vrai besoin :
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Exigence</th>
+          <th>Règle / Fonction</th>
+          <th>Risque Couvert</th>
+          <th>Niveau de Test</th>
+          <th>Outil Utilisé</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>EX-01</strong></td>
+          <td>Inscription &amp; Login JWT</td>
+          <td>Token invalide ou usurpation</td>
+          <td>API REST + Unitaire</td>
+          <td><span class="badge-tool">Postman / Jest</span></td>
+        </tr>
+        <tr>
+          <td><strong>EX-02</strong></td>
+          <td>Contrôle RBAC (User vs Admin)</td>
+          <td>Élévation de privilèges</td>
+          <td>Intégration + API</td>
+          <td><span class="badge-tool">Supertest / Postman</span></td>
+        </tr>
+        <tr>
+          <td><strong>EX-03</strong></td>
+          <td>Produit : Prix positif (&ge; 0)</td>
+          <td>Prix négatif / fraude</td>
+          <td>Unitaire (DTO)</td>
+          <td><span class="badge-tool">Jest</span></td>
+        </tr>
+        <tr>
+          <td><strong>EX-04</strong></td>
+          <td>Avis : Note entre 1 et 5</td>
+          <td>Fausse note ou crash calcul</td>
+          <td>Unitaire + BDD</td>
+          <td><span class="badge-tool">Jest + PostgreSQL</span></td>
+        </tr>
+        <tr>
+          <td><strong>EX-05</strong></td>
+          <td>Liaison Produit &harr; Avis</td>
+          <td>Données orphelines (Crash 500)</td>
+          <td>Intégration BDD</td>
+          <td><span class="badge-tool">TypeORM / Jest</span></td>
+        </tr>
+        <tr>
+          <td><strong>EX-06</strong></td>
+          <td>Parcours d'achat complet</td>
+          <td>Écran blanc / 404 Nginx</td>
+          <td>Interface (E2E)</td>
+          <td><span class="badge-tool">Playwright</span></td>
+        </tr>
+        <tr>
+          <td><strong>EX-07</strong></td>
+          <td>Vitesse sous charge (&lt; 500ms)</td>
+          <td>Lenteur insupportable du site</td>
+          <td>Performance</td>
+          <td><span class="badge-tool">k6</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -22,11 +22,15 @@
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:cov": "cross-env NODE_ENV=test jest --coverage",
     "test:debug": "cross-env NODE_ENV=test node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json",
+    "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json --runInBand",
+    "test:playwright": "playwright test",
+    "test:playwright:ui": "playwright test --ui",
+    "test:playwright:report": "playwright show-report",
+    "test:perf": "k6 run test-perf.js",
     "typeorm": "cross-env NODE_ENV=development npm run build && npx typeorm -d dist/db/data-source.js",
-    "migration:generate":"npm run typeorm -- migration:generate",
-    "migration:run":"npm run typeorm -- migration:run",
-    "migration:revert":"npm run typeorm -- migration:revert"
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.3.7",
@@ -57,6 +61,7 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@playwright/test": "^1.65.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.0",
     "@types/jest": "^30.0.0",

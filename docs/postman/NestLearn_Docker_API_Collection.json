@@ -1,0 +1,769 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "NestLearn - Complete Docker API Collection",
+    "description": "Collection complète d'API REST pour la plateforme NestLearn sous Docker (NestJS + PostgreSQL).\nTotalement autonome : auto-détecte les tokens (accessToken), auto-capture les IDs existants et dynamiques.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "createdProductId",
+      "value": "118",
+      "type": "string"
+    },
+    {
+      "key": "createdReviewId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "createdOrderId",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentification & Utilisateurs",
+      "item": [
+        {
+          "name": "Register - Nouvel Utilisateur (ou déjà existant)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test_postman_auto@nestlearn.com\",\n  \"password\": \"Secret123!\",\n  \"username\": \"PostmanUser\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "auth", "register"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Enregistrement réussi (201) ou compte déjà existant (400)\", function () {",
+                  "    pm.expect([200, 201, 400]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Admin (Récupère Token Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@nestlearn.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "var token = jsonData.accessToken || jsonData.token || jsonData.access_token;",
+                  "if (token) {",
+                  "    pm.collectionVariables.set(\"adminToken\", token);",
+                  "    pm.environment.set(\"adminToken\", token);",
+                  "    console.log(\"Admin Token enregistré avec succès : \" + token);",
+                  "} else {",
+                  "    console.warn(\"Pas de token dans la réponse : \", jsonData);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - Client Standard (Récupère Token User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@nestlearn.com\",\n  \"password\": \"user123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "auth", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "var token = jsonData.accessToken || jsonData.token || jsonData.access_token;",
+                  "if (token) {",
+                  "    pm.collectionVariables.set(\"userToken\", token);",
+                  "    pm.environment.set(\"userToken\", token);",
+                  "    console.log(\"User Token enregistré avec succès : \" + token);",
+                  "} else {",
+                  "    console.warn(\"Pas de token dans la réponse : \", jsonData);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/current-user",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "current-user"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Profile returned with 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var user = pm.response.json();",
+                  "pm.expect(user).to.have.property(\"email\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Users (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Admin can list all users (200 OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Produits & Catalogue",
+      "item": [
+        {
+          "name": "Get Products (Catalogue Public & Auto-Capture ID)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var prods = pm.response.json();",
+                  "pm.expect(Array.isArray(prods)).to.be.true;",
+                  "if (prods.length > 0) {",
+                  "    pm.collectionVariables.set(\"createdProductId\", String(prods[0].id));",
+                  "    pm.environment.set(\"createdProductId\", String(prods[0].id));",
+                  "    console.log(\"Produit existant capturé : ID = \" + prods[0].id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Product (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Casque Audio Pro Postman\",\n  \"description\": \"Casque sans fil haute fidelite pour developpeurs\",\n  \"price\": 79.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Product created with 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"createdProductId\", String(data.id));",
+                  "    pm.environment.set(\"createdProductId\", String(data.id));",
+                  "    console.log(\"Nouveau produit créé avec ID : \" + data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Product By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "{{createdProductId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Product detail returned with 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var prod = pm.response.json();",
+                  "pm.expect(prod).to.have.property(\"name\");"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Product (Admin Only)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Casque Audio Pro V2 (Mis à jour)\",\n  \"description\": \"Version amelioree avec reduction de bruit active\",\n  \"price\": 89.99\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/{{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products", "{{createdProductId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Product updated with 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Avis & Notations",
+      "item": [
+        {
+          "name": "Create Review for Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 5,\n  \"comment\": \"Superbe produit, tres confortable en teletravail !\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviews/{{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviews", "{{createdProductId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Review created (201) or already reviewed (400)\", function () {",
+                  "    pm.expect([200, 201, 400]).to.include(pm.response.code);",
+                  "});",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"createdReviewId\", String(data.id));",
+                  "    pm.environment.set(\"createdReviewId\", String(data.id));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get All Reviews (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/reviews",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviews"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Admin receives reviews list (200 OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Review",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Avis mis a jour apres un mois d utilisation.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviews/{{createdReviewId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviews", "{{createdReviewId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Review update (200 OK or 404/400)\", function () {",
+                  "    pm.expect([200, 404, 400]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Commandes (Orders)",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Rafed Client\",\n  \"address\": \"123 Rue de la Technologie\",\n  \"city\": \"Tunis\",\n  \"postalCode\": \"1000\",\n  \"phone\": \"+216 12 345 678\",\n  \"items\": [\n    {\n      \"productId\": {{createdProductId}},\n      \"quantity\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Order created with 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "var data = pm.response.json();",
+                  "if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"createdOrderId\", String(data.id));",
+                  "    pm.environment.set(\"createdOrderId\", String(data.id));",
+                  "    console.log(\"Commande créée avec ID : \" + data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get My Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"User receives orders list (200 OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Order By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/{{createdOrderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders", "{{createdOrderId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Order detail returned with 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(pm.response.json()).to.have.property(\"fullName\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Favoris (Wishlist)",
+      "item": [
+        {
+          "name": "Add Product to Favorites",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/favorites/{{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "favorites", "{{createdProductId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Favorite added (200/201)\", function () {",
+                  "    pm.expect([200, 201]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get My Favorites",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/favorites",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "favorites"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Favorites list returned (200 OK)\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(Array.isArray(pm.response.json())).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Check If Favorite",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/favorites/check/{{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "favorites", "check", "{{createdProductId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Check favorite response contains isFavorite\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    pm.expect(pm.response.json()).to.have.property('isFavorite');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6. Tests Négatifs & Sécurité (RBAC & BVA)",
+      "item": [
+        {
+          "name": "Sécurité : User simple tente de créer un produit (Attendu 403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Produit Pirate\",\n  \"description\": \"Tentative non autorisee\",\n  \"price\": 10.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "products"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"RBAC Shield : Access Forbidden (403)\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sécurité : Requête sans Token (Attendu 401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Hacker\",\n  \"address\": \"Rue\",\n  \"city\": \"Ville\",\n  \"postalCode\": \"000\",\n  \"phone\": \"000\",\n  \"items\": [{\"productId\": 118, \"quantity\": 1}]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auth Shield : Unauthorized (401)\", function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "BVA : Note invalide supérieure à 5 (Attendu 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 10,\n  \"comment\": \"Note de 10 interdite par la regle metier\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/reviews/{{createdProductId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reviews", "{{createdProductId}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validation : Bad Request for rating > 5 (400)\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "BVA : Panier vide lors d'une commande (Attendu 400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{userToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Client Test\",\n  \"address\": \"Rue\",\n  \"city\": \"Ville\",\n  \"postalCode\": \"1000\",\n  \"phone\": \"12345678\",\n  \"items\": []\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "orders"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validation : Bad Request for empty items (400)\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

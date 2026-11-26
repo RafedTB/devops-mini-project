@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 7 : Tests d'Intégration & Base de Données (PostgreSQL) - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 07 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="06_tests_unitaires.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="08_tests_api_rest.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 07 / 10</span>
+    <h1>Étape 7 : Tests d'Intégration & Base de Données (PostgreSQL)</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Validation de la persistance réelle et de l'intégrité relationnelle sous PostgreSQL. Vérification des contraintes d'unicité, des suppressions en cascade (ON DELETE CASCADE) et mise en place de transactions isolées avec nettoyage automatisé.
+    </div>
+  </div>
+
+  <!-- 1. Différence Unitaire vs Intégration -->
+  <div class="card">
+    <h2>1. Objectifs des Tests d'Intégration et Persistance</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>Test Unitaire (Étape 6)</strong>
+        <p>Utilise de faux objets (mocks). Il teste si le code TypeScript réfléchit bien, sans toucher au disque dur ni au réseau.</p>
+      </div>
+      <div class="box" style="border-left: 4px solid var(--cyan);">
+        <strong>Test d'Intégration (Étape 7)</strong>
+        <p>Envoie de vraies requêtes SQL <code>INSERT</code>, <code>SELECT</code>, <code>DELETE</code> dans PostgreSQL pour vérifier la persistance réelle.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Les 3 Tests d'Intégration Obligatoires -->
+  <div class="card">
+    <h2>2. Validation de l'Intégrité Relationnelle (PostgreSQL)</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID Test</th>
+            <th>Cible &amp; Opération</th>
+            <th>Scénario Exécuté</th>
+            <th>Vérification SQL / ORM</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>INT-01</strong></td>
+            <td>CRUD Produit persistant</td>
+            <td>Créer un produit &rarr; Relire par son ID &rarr; Modifier son prix &rarr; Supprimer.</td>
+            <td>La ligne existe bien dans la table <code>products</code> et disparaît après <code>DELETE</code>.</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>INT-02</strong></td>
+            <td>Contrainte d'unicité Email</td>
+            <td>Tenter d'insérer 2 utilisateurs avec le même email <code>duplicate@test.com</code>.</td>
+            <td>PostgreSQL déclenche une erreur d'intégrité <code>unique_violation</code> interceptée.</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>INT-03</strong></td>
+            <td>Intégrité relationnelle (FK)</td>
+            <td>Lier un avis à un produit existant (ID: 1) puis tenter de lier à un produit inexistant (ID: 9999).</td>
+            <td>L'avis valide est persisté ; l'avis avec fausse clé étrangère est rejeté par la BDD.</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. Reproductibilité -->
+  <div class="card">
+    <h2>3. Gestion de l'Isolement et Nettoyage des Données</h2>
+    <ul>
+      <li><strong>Base isolée :</strong> Les tests tournent sur <code>devops_test</code> pour ne pas effacer les comptes de dev.</li>
+      <li><strong>Nettoyage automatique (Hooks) :</strong>
+        <ul style="margin-top: 0.3rem;">
+          <li><code>beforeAll()</code> : Initialise la connexion TypeORM et lance les migrations.</li>
+          <li><code>afterEach()</code> : Nettoie les tables de test pour que le test suivant reparte de zéro.</li>
+          <li><code>afterAll()</code> : Ferme proprement la connexion à la base.</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

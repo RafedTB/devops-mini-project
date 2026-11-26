@@ -1,11 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { User } from '../src/users/user.entity';
 import { Product } from '../src/products/product.entity';
 import { Review } from '../src/reviews/review.entity';
+import { Favorite } from '../src/favorites/favorite.entity';
+import { OrderItem } from '../src/orders/order-item.entity';
+import { Order } from '../src/orders/order.entity';
 import { UserType } from '../src/utils/enum';
 import { MailService } from '../src/mail/mail.service';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -16,9 +19,9 @@ describe('UsersController (e2e)', () => {
   let dataSource: DataSource;
 
   const testUser = {
-    email: 'testuser@example.com',
+    email: 'usertest@example.com',
     password: 'password123',
-    username: 'testuser',
+    username: 'usertest',
   };
 
   beforeAll(async () => {
@@ -36,17 +39,29 @@ describe('UsersController (e2e)', () => {
       .compile();
 
     app = module.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    );
     await app.init();
     dataSource = app.get(DataSource);
   });
 
-  afterEach(async () => {
+  beforeEach(async () => {
+    await dataSource.createQueryBuilder().delete().from(OrderItem).execute();
+    await dataSource.createQueryBuilder().delete().from(Order).execute();
+    await dataSource.createQueryBuilder().delete().from(Favorite).execute();
     await dataSource.createQueryBuilder().delete().from(Review).execute();
     await dataSource.createQueryBuilder().delete().from(Product).execute();
     await dataSource.createQueryBuilder().delete().from(User).execute();
   });
 
   afterAll(async () => {
+    await dataSource.createQueryBuilder().delete().from(OrderItem).execute();
+    await dataSource.createQueryBuilder().delete().from(Order).execute();
+    await dataSource.createQueryBuilder().delete().from(Favorite).execute();
+    await dataSource.createQueryBuilder().delete().from(Review).execute();
+    await dataSource.createQueryBuilder().delete().from(Product).execute();
+    await dataSource.createQueryBuilder().delete().from(User).execute();
     await app.close();
   });
 

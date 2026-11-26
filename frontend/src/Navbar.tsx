@@ -32,10 +32,40 @@ export default function Navbar() {
 
   return (
     <header className="navbar-wrapper">
+      <div className="top-announcement-bar">
+        <div className="announcement-content">
+          <span>Free Express Shipping Over $50</span>
+          <span className="announcement-separator">&bull;</span>
+          <span>Authentic Developer Gear</span>
+          <span className="announcement-separator">&bull;</span>
+          <span>30-Day Risk-Free Returns</span>
+        </div>
+      </div>
       <nav className="navbar">
         <Link to="/" className="nav-brand">
-          DevOps Store
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+          <span>NestStore</span>
         </Link>
+
+        <div className="nav-center-links">
+          <Link to="/" className="nav-page-link">Catalog</Link>
+          <Link to="/orders" className="nav-page-link">Orders</Link>
+          <Link to="/wishlist" className="nav-page-link">Wishlist</Link>
+        </div>
+
         <div className="nav-links">
           {/* Cart Link with Badge */}
           <Link to="/cart" className="nav-cart-btn" title="View Shopping Cart">

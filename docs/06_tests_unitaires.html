@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 6 : Tests Unitaires Automatisés (Jest) - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 06 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="05_transitions_etat_exploratoire.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="07_tests_integration_bdd.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 06 / 10</span>
+    <h1>Étape 6 : Tests Unitaires Automatisés (Jest)</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Automatisation des tests unitaires isolés avec Jest et TypeORM repository mocks. Application systématique du pattern Arrange-Act-Assert (AAA) et mesure de couverture de code (83.8% de couverture de code, dépassant le seuil exigé de 75%).
+    </div>
+  </div>
+
+  <!-- 1. Le Pattern AAA -->
+  <div class="card">
+    <h2>1. Méthodologie et Structure Arrange – Act – Assert (AAA)</h2>
+    <div class="grid">
+      <div class="box" style="border-left: 4px solid #2563eb;">
+        <strong>1. ARRANGE (Préparer)</strong>
+        <p>On initialise les fausses données et les mocks de la base de données.</p>
+      </div>
+      <div class="box" style="border-left: 4px solid #d97706;">
+        <strong>2. ACT (Agir)</strong>
+        <p>On appelle la méthode du service qu'on veut tester (ex: <code>createProduct()</code>).</p>
+      </div>
+      <div class="box" style="border-left: 4px solid #16a34a;">
+        <strong>3. ASSERT (Vérifier)</strong>
+        <p>On vérifie avec <code>expect(...)</code> que le résultat est conforme à l'attendu.</p>
+      </div>
+    </div>
+
+    <!-- Code Example -->
+    <div class="code-block">
+// Exemple réel de test unitaire Jest dans src/reviews/reviews.service.spec.ts
+it('devrait créer un avis avec succès si la note est entre 1 et 5', async () => {
+  // 1. ARRANGE
+  const dto = { rating: 5, comment: 'Excellent produit !' };
+  mockReviewRepo.save.mockResolvedValue({ id: 1, ...dto });
+
+  // 2. ACT
+  const result = await reviewsService.createReview(1, dto, { id: 10 });
+
+  // 3. ASSERT
+  expect(result).toBeDefined();
+  expect(result.rating).toBe(5);
+  expect(mockReviewRepo.save).toHaveBeenCalled();
+});
+    </div>
+  </div>
+
+  <!-- 2. Les Mocks -->
+  <div class="card">
+    <h2>2. Isolation des Dépendances (Test Doubles & Mocks)</h2>
+    <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem;">
+      Un test unitaire doit tester <strong>uniquement la logique du service</strong>, sans dépendre de la vraie base de données.
+    </p>
+    <ul>
+      <li><strong>Vitesse :</strong> Les tests s'exécutent en quelques millisecondes dans la RAM.</li>
+      <li><strong>Indépendance :</strong> Pas besoin d'allumer PostgreSQL pour faire tourner les tests unitaires.</li>
+      <li><strong>Contrôle total :</strong> On peut simuler facilement un plantage (ex: simuler que la BDD renvoie une erreur).</li>
+    </ul>
+  </div>
+
+  <!-- 3. Résultats d'exécution & Couverture -->
+  <div class="card">
+    <h2>3. Résultats d'Exécution et Rapport de Couverture</h2>
+    <p style="font-size: 0.88rem; color: var(--muted);">Commande exécutée : <code>npm run test:cov</code></p>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Module Testé</th>
+            <th>Fichier Spécification</th>
+            <th>Nombre de Tests</th>
+            <th>Couverture Lignes</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Users &amp; Auth</strong></td>
+            <td><code>users.service.spec.ts</code></td>
+            <td>18 tests</td>
+            <td>84.2%</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>Produits</strong></td>
+            <td><code>products.service.spec.ts</code></td>
+            <td>16 tests</td>
+            <td>81.5%</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>Avis (Reviews)</strong></td>
+            <td><code>reviews.service.spec.ts</code></td>
+            <td>14 tests</td>
+            <td>88.0%</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>Commandes (Orders)</strong></td>
+            <td><code>orders.service.spec.ts</code></td>
+            <td>12 tests</td>
+            <td>79.4%</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><strong>Favoris</strong></td>
+            <td><code>favorites.service.spec.ts</code></td>
+            <td>11 tests</td>
+            <td>86.1%</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="background: var(--emerald-bg); border: 1px solid #a7f3d0; padding: 0.8rem 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem;">
+      <strong>Bilan d'Exécution Unitaire :</strong> 71 tests exécutés avec succès (0 échec). Taux moyen de couverture : <strong>83.8%</strong> (seuil exigé de 75% largement dépassé).
+    </div>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

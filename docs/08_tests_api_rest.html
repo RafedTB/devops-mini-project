@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 8 : Tests de l'API REST (Postman / Supertest) - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 08 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="07_tests_integration_bdd.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="09_interface_non_fonctionnel.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 08 / 10</span>
+    <h1>Étape 8 : Tests de l'API REST (Postman / Supertest)</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Campagne de tests d'API REST via Postman et Supertest. Validation des statuts HTTP (200, 201, 400, 401, 403, 404), de la conformité des payloads JSON et de l'étanchéité des contrôles d'accès basés sur les rôles (RBAC).
+    </div>
+  </div>
+
+  <!-- 1. Ce qu'on vérifie sur l'API -->
+  <div class="card">
+    <h2>1. Protocole de Validation de l'API REST</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>1. Codes de Statut HTTP</strong>
+        <p>200 (OK), 201 (Créé), 400 (Mauvaise requête), 401 (Non connecté), 403 (Accès interdit), 404 (Introuvable).</p>
+      </div>
+      <div class="box">
+        <strong>2. En-têtes (Headers)</strong>
+        <p>Présence de <code>Content-Type: application/json</code> et gestion du header <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+      </div>
+      <div class="box">
+        <strong>3. Structure du JSON (Schéma)</strong>
+        <p>Le corps de la réponse contient bien les clés attendues (<code>id</code>, <code>email</code>, <code>price</code>) sans données secrètes (ex: mot de passe jamais renvoyé !).</p>
+      </div>
+      <div class="box">
+        <strong>4. Gestion Propre des Erreurs</strong>
+        <p>En cas d'erreur de saisie, renvoyer un message d'erreur clair et lisible plutôt qu'un crash serveur 500.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Suite de Tests API -->
+  <div class="card">
+    <h2>2. Synthèse d'Exécution de la Suite API</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Méthode &amp; Endpoint</th>
+            <th>Description &amp; En-têtes</th>
+            <th>Payload Envoyé</th>
+            <th>Statut HTTP Attendu</th>
+            <th>Résultat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="method m-post">POST</span> <code>/auth/login</code></td>
+            <td>Connexion réussie</td>
+            <td><code>{ "email": "admin@nestlearn.com", "password": "..." }</code></td>
+            <td><strong>200 OK</strong> (avec access_token)</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><span class="method m-post">POST</span> <code>/auth/login</code></td>
+            <td>Échec mot de passe erroné</td>
+            <td><code>{ "email": "admin@nestlearn.com", "password": "faux" }</code></td>
+            <td><strong>401 Unauthorized</strong></td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><span class="method m-post">POST</span> <code>/products</code></td>
+            <td>Création avec compte admin</td>
+            <td>Bearer Token (Admin) + <code>{ "name": "Clavier", "price": 40 }</code></td>
+            <td><strong>201 Created</strong></td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><span class="method m-post">POST</span> <code>/products</code></td>
+            <td>Tentative création sans token</td>
+            <td>Aucun header Authorization</td>
+            <td><strong>401 Unauthorized</strong></td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><span class="method m-post">POST</span> <code>/products</code></td>
+            <td>Tentative création avec compte simple client</td>
+            <td>Bearer Token (User)</td>
+            <td><strong>403 Forbidden</strong></td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><span class="method m-get">GET</span> <code>/products</code></td>
+            <td>Consultation publique du catalogue</td>
+            <td>Public (aucun token nécessaire)</td>
+            <td><strong>200 OK</strong> (Tableau JSON)</td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+          <tr>
+            <td><span class="method m-delete">DELETE</span> <code>/reviews/9999</code></td>
+            <td>Suppression d'un avis inexistant</td>
+            <td>Bearer Token</td>
+            <td><strong>404 Not Found</strong></td>
+            <td><span class="badge-ok">PASS</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

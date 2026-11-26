@@ -7,6 +7,8 @@ import { User } from '../src/users/user.entity';
 import { Product } from '../src/products/product.entity';
 import { Order } from '../src/orders/order.entity';
 import { OrderItem } from '../src/orders/order-item.entity';
+import { Review } from '../src/reviews/review.entity';
+import { Favorite } from '../src/favorites/favorite.entity';
 import { UserType } from '../src/utils/enum';
 import { MailService } from '../src/mail/mail.service';
 import { ThrottlerGuard } from '@nestjs/throttler';
@@ -41,6 +43,13 @@ describe('OrdersController (e2e)', () => {
   });
 
   beforeEach(async () => {
+    await dataSource.createQueryBuilder().delete().from(OrderItem).execute();
+    await dataSource.createQueryBuilder().delete().from(Order).execute();
+    await dataSource.createQueryBuilder().delete().from(Favorite).execute();
+    await dataSource.createQueryBuilder().delete().from(Review).execute();
+    await dataSource.createQueryBuilder().delete().from(Product).execute();
+    await dataSource.createQueryBuilder().delete().from(User).execute();
+
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash('password123', salt);
 
@@ -57,17 +66,11 @@ describe('OrdersController (e2e)', () => {
       })
       .execute();
 
-    const productResult = await dataSource
-      .createQueryBuilder()
-      .insert()
-      .into(Product)
-      .values({
-        name: 'Gaming Mouse',
-        description: 'Fast optical sensor mouse',
-        price: 50.0,
-      })
-      .execute();
-    testProduct = productResult.generatedMaps[0] as Product;
+    testProduct = await dataSource.getRepository(Product).save({
+      name: 'Gaming Mouse',
+      description: 'Fast optical sensor mouse',
+      price: 50.0,
+    });
 
     const loginRes = await request(app.getHttpServer())
       .post('/api/users/auth/login')
@@ -76,14 +79,13 @@ describe('OrdersController (e2e)', () => {
     accessToken = loginRes.body.accessToken;
   });
 
-  afterEach(async () => {
+  afterAll(async () => {
     await dataSource.createQueryBuilder().delete().from(OrderItem).execute();
     await dataSource.createQueryBuilder().delete().from(Order).execute();
+    await dataSource.createQueryBuilder().delete().from(Favorite).execute();
+    await dataSource.createQueryBuilder().delete().from(Review).execute();
     await dataSource.createQueryBuilder().delete().from(Product).execute();
     await dataSource.createQueryBuilder().delete().from(User).execute();
-  });
-
-  afterAll(async () => {
     await app.close();
   });
 

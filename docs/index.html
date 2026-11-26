@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dossier de Test &amp; Validation des Logiciels — NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .portal-hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #ffffff;
+      padding: 2.5rem 2.25rem;
+      border-radius: 12px;
+      margin: 1.5rem 0 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+    }
+    .portal-hero .hero-tag {
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #f8fafc;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+    .portal-hero h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .portal-hero p {
+      color: #cbd5e1;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      max-width: 800px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+    .stat-num {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--blue);
+      letter-spacing: -0.02em;
+    }
+    .stat-num.success {
+      color: var(--emerald);
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .step-item {
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+    .step-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.08);
+      border-color: #94a3b8;
+      text-decoration: none;
+    }
+    .step-left {
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+    }
+    .step-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background-color: #f1f5f9;
+      color: var(--navy-dark);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+    .step-item:hover .step-badge {
+      background-color: var(--navy-dark);
+      color: #ffffff;
+      border-color: var(--navy-dark);
+    }
+    .step-title {
+      font-weight: 600;
+      font-size: 0.98rem;
+      color: var(--navy-dark);
+      margin-bottom: 0.15rem;
+    }
+    .step-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .step-action {
+      background-color: #f8fafc;
+      color: #334155;
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .step-item:hover .step-action {
+      background-color: var(--navy-dark);
+      color: #ffffff;
+      border-color: var(--navy-dark);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="portal-hero">
+    <span class="hero-tag">Dossier Académique &bull; Licence 3</span>
+    <h1>Campagne de Test &amp; Validation des Logiciels</h1>
+    <p>Application <strong>NestLearn</strong> (E-Commerce &amp; Avis Clients) &bull; Référentiel méthodologique et technique complet structuré en 10 livrables d'homologation selon les normes ISTQB / IEEE 829.</p>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">10 / 10</div>
+      <div class="stat-label">Livrables Validés</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">71</div>
+      <div class="stat-label">Tests Unitaires Passants</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">83.8%</div>
+      <div class="stat-label">Couverture de Code</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num success">AVIS FAVORABLE</div>
+      <div class="stat-label">Décision de Livraison</div>
+    </div>
+  </div>
+
+  <div class="steps-list">
+    <!-- Step 1 -->
+    <a href="01_fiche_projet.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">01</div>
+        <div>
+          <div class="step-title">Fiche Projet &amp; Cartographie des Risques</div>
+          <div class="step-desc">Cadrage, architecture 3 tiers, périmètre in/out scope et 4 définitions clés ISTQB.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 2 -->
+    <a href="02_plan_de_test.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">02</div>
+        <div>
+          <div class="step-title">Plan de Test &amp; Stratégie Globale</div>
+          <div class="step-desc">Pyramide des tests, environnements isolés Docker, critères formels d'entrée et de sortie.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 3 -->
+    <a href="03_exigences_matrice.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">03</div>
+        <div>
+          <div class="step-title">Exigences &amp; Matrice de Traçabilité</div>
+          <div class="step-desc">Ambiguïtés levées, critères d'acceptation Given-When-Then et tableau de traçabilité intégrale.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 4 -->
+    <a href="04_catalogue_tests.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">04</div>
+        <div>
+          <div class="step-title">Conception des Tests &amp; Catalogue des 15 Cas</div>
+          <div class="step-desc">Partitions d'équivalence, analyse des valeurs limites (BVA) et fiches de test documentées.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 5 -->
+    <a href="05_transitions_etat_exploratoire.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">05</div>
+        <div>
+          <div class="step-title">Transitions d'État &amp; Tests Exploratoires</div>
+          <div class="step-desc">Cycle de vie des commandes, transitions autorisées/interdites et registre des premiers bugs.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 6 -->
+    <a href="06_tests_unitaires.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">06</div>
+        <div>
+          <div class="step-title">Tests Unitaires Automatisés (Jest)</div>
+          <div class="step-desc">Pattern Arrange-Act-Assert, mocks des repositories TypeORM et rapport de couverture (83.8%).</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 7 -->
+    <a href="07_tests_integration_bdd.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">07</div>
+        <div>
+          <div class="step-title">Tests d'Intégration &amp; BDD (PostgreSQL)</div>
+          <div class="step-desc">Persistance réelle, intégrité référentielle, contraintes d'unicité et hooks de nettoyage.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 8 -->
+    <a href="08_tests_api_rest.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">08</div>
+        <div>
+          <div class="step-title">Tests de l'API REST (Postman / Supertest)</div>
+          <div class="step-desc">Codes HTTP (200, 201, 400, 401, 403, 404), validation des schémas JSON et auth JWT RBAC.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 9 -->
+    <a href="09_interface_non_fonctionnel.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">09</div>
+        <div>
+          <div class="step-title">Tests d'Interface (Playwright) &amp; Performance (k6)</div>
+          <div class="step-desc">Simulation navigateur Chromium du parcours critique et test sous charge (20 VUs, 115 ms).</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+
+    <!-- Step 10 -->
+    <a href="10_bilan_decision_livraison.html" class="step-item">
+      <div class="step-left">
+        <div class="step-badge">10</div>
+        <div>
+          <div class="step-title">Bilan de Campagne &amp; Décision de Livraison</div>
+          <div class="step-desc">Registre consolidé des anomalies, bilan d'atteinte des critères de sortie et avis de livraison.</div>
+        </div>
+      </div>
+      <div class="step-action">Consulter &rarr;</div>
+    </a>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

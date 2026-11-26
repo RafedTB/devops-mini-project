@@ -1,12 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { DataSource } from 'typeorm';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { Product } from '../src/products/product.entity';
 import { CreateProductDto } from '../src/products/dto/create-product.dto';
 import { User } from '../src/users/user.entity';
+import { Review } from '../src/reviews/review.entity';
+import { Favorite } from '../src/favorites/favorite.entity';
+import { OrderItem } from '../src/orders/order-item.entity';
+import { Order } from '../src/orders/order.entity';
 import { UserType } from '../src/utils/enum';
+import { MailService } from '../src/mail/mail.service';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import * as bcrypt from 'bcryptjs';
 
@@ -42,13 +47,31 @@ describe('ProductsController (e2e)', () => {
     })
       .overrideGuard(ThrottlerGuard)
       .useValue({ canActivate: () => true })
+      .overrideProvider(MailService)
+      .useValue({
+        sendVerificationMail: jest.fn(),
+        sendResetPassword: jest.fn(),
+        sendLoginMail: jest.fn(),
+      })
       .compile();
 
     app = module.createNestApplication();
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }),
+    );
     await app.init();
     dataSource = app.get(DataSource);
+  });
 
-    //sabving new user (admin) to the database
+  beforeEach(async () => {
+    await dataSource.createQueryBuilder().delete().from(OrderItem).execute();
+    await dataSource.createQueryBuilder().delete().from(Order).execute();
+    await dataSource.createQueryBuilder().delete().from(Favorite).execute();
+    await dataSource.createQueryBuilder().delete().from(Review).execute();
+    await dataSource.createQueryBuilder().delete().from(Product).execute();
+    await dataSource.createQueryBuilder().delete().from(User).execute();
+
+    // Create admin user for product tests
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash('admin123', salt);
     await dataSource
@@ -64,11 +87,13 @@ describe('ProductsController (e2e)', () => {
       })
       .execute();
   });
-  afterEach(async () => {
-    await dataSource.createQueryBuilder().delete().from(Product).execute();
-  });
 
   afterAll(async () => {
+    await dataSource.createQueryBuilder().delete().from(OrderItem).execute();
+    await dataSource.createQueryBuilder().delete().from(Order).execute();
+    await dataSource.createQueryBuilder().delete().from(Favorite).execute();
+    await dataSource.createQueryBuilder().delete().from(Review).execute();
+    await dataSource.createQueryBuilder().delete().from(Product).execute();
     await dataSource.createQueryBuilder().delete().from(User).execute();
     await app.close();
   });

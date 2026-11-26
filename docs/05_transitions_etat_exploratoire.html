@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 5 : Transitions d'État & Tests Exploratoires - NestLearn</title>
+  <link rel="stylesheet" href="style.css"><style>
+    .state-flow { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.75rem; background-color: #0f172a; color: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0; }
+    .state-pill { background-color: #1e293b; border: 1.5px solid #38bdf8; color: #e0f2fe; padding: 0.5rem 1.1rem; border-radius: 9999px; font-weight: 600; font-size: 0.85rem; }
+    .state-pill.state-cancel { border-color: #f87171; color: #fee2e2; }
+    .state-arrow { color: #94a3b8; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 05 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="04_catalogue_tests.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="06_tests_unitaires.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 05 / 10</span>
+    <h1>Étape 5 : Transitions d'État & Tests Exploratoires</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Cartographie du cycle de vie des commandes via un modèle à états finis, identification des transitions autorisées et interdites, et restitution d'une session de test exploratoire documentant les premières anomalies constatées.
+    </div>
+  </div>
+
+  <!-- 1. Le Cycle de Vie et le Diagramme d'États -->
+  <div class="card">
+    <h2>1. Cycle de Vie et Diagramme de Transitions d'État</h2>
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      Chaque commande traverse une séquence logique d'états :
+    </p>
+
+    <div class="state-flow">
+      <div class="state-pill">1. CRÉÉE (Panier)</div>
+      <div class="state-arrow">&rarr;</div>
+      <div class="state-pill">2. PAYÉE</div>
+      <div class="state-arrow">&rarr;</div>
+      <div class="state-pill">3. EXPÉDIÉE</div>
+      <div class="state-arrow">&rarr;</div>
+      <div class="state-pill">4. LIVRÉE (Clôturée)</div>
+    </div>
+    <div style="text-align: center; font-size: 0.88rem; color: #dc2626; font-weight: 600;">
+      <span style="color:#f87171; font-weight:600;">Transition alternative :</span> CRÉÉE ou PAYÉE &rarr; <span class="state-pill state-cancel" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;">ANNULÉE</span>
+    </div>
+  </div>
+
+  <!-- 2. Matrice des Transitions Autorisées vs Interdites -->
+  <div class="card">
+    <h2>2. Matrice des Transitions Autorisées et Interdites</h2>
+    <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 0.8rem;">
+      Tester les transitions interdites permet de détecter des failles de logique métier :
+    </p>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>État Initial</th>
+            <th>Événement / Action</th>
+            <th>État Cible</th>
+            <th>Validité</th>
+            <th>Règle Métier &amp; Comportement Attendu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CRÉÉE</strong></td>
+            <td>Paiement validé</td>
+            <td><strong>PAYÉE</strong></td>
+            <td><span class="badge badge-ok">Autorisée</span></td>
+            <td>Transition normale : la commande passe au statut payé (200 OK).</td>
+          </tr>
+          <tr>
+            <td><strong>PAYÉE</strong></td>
+            <td>Colis remis au transporteur</td>
+            <td><strong>EXPÉDIÉE</strong></td>
+            <td><span class="badge badge-ok">Autorisée</span></td>
+            <td>L'administrateur renseigne le numéro de suivi postal.</td>
+          </tr>
+          <tr>
+            <td><strong>EXPÉDIÉE</strong></td>
+            <td>Confirmation de réception</td>
+            <td><strong>LIVRÉE</strong></td>
+            <td><span class="badge badge-ok">Autorisée</span></td>
+            <td>Clôture du cycle de commande.</td>
+          </tr>
+          <tr style="background: #fff1f2;">
+            <td><strong>CRÉÉE</strong></td>
+            <td>Passage direct à LIVRÉE</td>
+            <td><strong>LIVRÉE</strong></td>
+            <td><span class="badge badge-ko">Interdite</span></td>
+            <td><strong>Bug critique :</strong> Impossible de livrer sans paiement préalable. Rejet 400.</td>
+          </tr>
+          <tr style="background: #fff1f2;">
+            <td><strong>LIVRÉE</strong></td>
+            <td>Demande d'annulation</td>
+            <td><strong>ANNULÉE</strong></td>
+            <td><span class="badge badge-ko">Interdite</span></td>
+            <td>Une commande déjà livrée ne peut plus être annulée (il faut passer par les retours).</td>
+          </tr>
+          <tr style="background: #fff1f2;">
+            <td><strong>ANNULÉE</strong></td>
+            <td>Paiement tardif</td>
+            <td><strong>PAYÉE</strong></td>
+            <td><span class="badge badge-ko">Interdite</span></td>
+            <td>Une commande annulée est définitivement fermée.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. Tests Exploratoires -->
+  <div class="card">
+    <h2>3. Charte et Démarche de Test Exploratoire</h2>
+    <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem;">
+      Au lieu de suivre des scénarios rigides, le testeur adopte l'attitude d'un utilisateur réel pour stresser le système.
+    </p>
+
+    <div class="grid">
+      <div class="box">
+        <strong>Charte 1 : Le Double-Clic Frénétique</strong>
+        <p>Cliquer 4 fois très rapidement sur le bouton <em>« Confirmer la commande »</em>.<br>
+        <strong>Résultat attendu :</strong> 1 seule commande créée, le bouton se désactive pour éviter le double débit.</p>
+      </div>
+      <div class="box">
+        <strong>Charte 2 : Le Rafraîchissement brutal (F5)</strong>
+        <p>Appuyer sur <code>F5</code> en plein milieu de la validation du panier.<br>
+        <strong>Résultat attendu :</strong> Le panier n'est pas perdu, aucune commande fantôme créée.</p>
+      </div>
+      <div class="box">
+        <strong>Charte 3 : Injection de caractères spéciaux</strong>
+        <p>Taper des balises HTML comme <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> dans un commentaire d'avis.<br>
+        <strong>Résultat attendu :</strong> Texte affiché tel quel sans exécution (protection XSS).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Premières Fiches d'Anomalie -->
+  <div class="card">
+    <h2>4. Fiches d'Anomalie Détectées (Bug Reports)</h2>
+    <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 1rem;">
+      Exemples de rapports de bugs formalisés selon le standard professionnel :
+    </p>
+
+    <!-- Bug 1 -->
+    <div class="bug-card">
+      <h3>
+        <span>[BUG-01] Double soumission possible lors de la création d'un avis</span>
+        <span class="badge badge-sev-med">Sévérité : Moyenne</span>
+      </h3>
+      <p style="font-size: 0.88rem;"><strong>Module :</strong> Avis Produits (Frontend + Backend)</p>
+      <div class="bug-steps">
+        <strong>Étapes pour reproduire :</strong><br>
+        1. Se connecter avec le compte <code>client1@nestlearn.com</code>.<br>
+        2. Ouvrir le produit ID 2 (Clavier).<br>
+        3. Remplir le commentaire et cliquer 3 fois très vite sur « Envoyer ».<br>
+        <strong>Résultat observé :</strong> 2 avis identiques créés avec 1 seconde d'écart.<br>
+        <strong>Résultat attendu :</strong> Le bouton doit se désactiver instantanément après le 1er clic (état <em>loading</em>).
+      </div>
+    </div>
+
+    <!-- Bug 2 -->
+    <div class="bug-card">
+      <h3>
+        <span>[BUG-02] Erreur 500 au lieu de 400 si un prix est envoyé sous forme de texte</span>
+        <span class="badge badge-sev-high">Sévérité : Élevée</span>
+      </h3>
+      <p style="font-size: 0.88rem;"><strong>Module :</strong> API Backend (<code>POST /products</code>)</p>
+      <div class="bug-steps">
+        <strong>Étapes pour reproduire :</strong><br>
+        1. Envoyer une requête POST avec le body <code>{ "price": "cent_euros" }</code>.<br>
+        <strong>Résultat observé :</strong> Le serveur renvoie un code <strong>HTTP 500 Internal Server Error</strong> avec un crash TypeORM.<br>
+        <strong>Résultat attendu :</strong> Le serveur doit intercepter l'erreur avec <code>class-validator</code> et renvoyer un code <strong>HTTP 400 Bad Request</strong> propre.
+      </div>
+    </div>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

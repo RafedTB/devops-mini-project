@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 9 : Tests d'Interface (Playwright) & Performance (k6) - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 09 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="08_tests_api_rest.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="10_bilan_decision_livraison.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 09 / 10</span>
+    <h1>Étape 9 : Tests d'Interface (Playwright) & Performance (k6)</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Automatisation du parcours utilisateur critique de bout en bout avec Playwright (E2E) sur navigateur Chromium headless, complétée par un test non fonctionnel de performance sous charge avec k6 (20 utilisateurs simultanés, temps de réponse moyen 115 ms).
+    </div>
+  </div>
+
+  <!-- 1. Le Parcours Critique Playwright -->
+  <div class="card">
+    <h2>1. Automatisation E2E du Parcours Critique (Playwright)</h2>
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      Playwright pilote un vrai navigateur web (Chromium) et rejoue le parcours critique sans intervention humaine :
+    </p>
+
+    <div class="flow-steps">
+      <div class="flow-step">
+        <strong>Étape 1 : Navigation &amp; Connexion</strong><br>
+        Le robot ouvre la page <code>/login</code>, remplit l'email et le mot de passe, clique sur "Se connecter", et vérifie l'apparition du menu utilisateur.
+      </div>
+      <div class="flow-step">
+        <strong>Étape 2 : Consultation du Catalogue</strong><br>
+        Il clique sur un produit de la liste (ex: "Clavier Mécanique"), vérifie que l'URL passe à <code>/products/2</code> et que la page ne donne aucune erreur 404 Nginx.
+      </div>
+      <div class="flow-step">
+        <strong>Étape 3 : Dépôt d'un Avis</strong><br>
+        Il sélectionne 5 étoiles, saisit le commentaire <em>« Test automatisé réussi »</em> et valide le formulaire.
+      </div>
+      <div class="flow-step">
+        <strong>Étape 4 : Assertion Visuelle</strong><br>
+        Il vérifie que le nouvel avis apparaît bien dans la liste avec la note et le badge client. Statut : <span class="badge-ok">PASS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Test Non Fonctionnel avec k6 -->
+  <div class="card">
+    <h2>2. Test Non Fonctionnel de Performance sous Charge (k6)</h2>
+    <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem;">
+      Protocole de test : <strong>20 Virtual Users (VUs)</strong> envoyant des requêtes en boucle sur <code>GET /products</code> pendant 30 secondes.
+    </p>
+
+    <div class="perf-box">
+      $ k6 run test-perf.js<br><br>
+      ✓ statut HTTP est 200 .......................: 100% (1450 requêtes sur 1450)<br>
+      ✓ temps de réponse &lt; 500ms ................: 100%<br><br>
+      <strong>Résultats Mesurés :</strong><br>
+      • Débit moyen (RPS) ........................: 48.3 requêtes / seconde<br>
+      • Temps de réponse moyen (avg) .............: <strong>115.4 ms</strong> (Objectif &lt; 300 ms : RESPECTÉ)<br>
+      • Temps au 95e percentile (p95) ............: <strong>238.1 ms</strong> (Objectif &lt; 500 ms : RESPECTÉ)<br>
+      • Taux d'erreurs (HTTP 500) ................: <strong>0.00%</strong> (Aucun crash sous charge)
+    </div>
+
+    <div class="grid">
+      <div class="box">
+        <strong>Conclusion Performance</strong>
+        <p>L'API NestJS conteneurisée supporte la charge étudiante nominale sans ralentissement perceptible.</p>
+      </div>
+      <div class="box">
+        <strong>Limite Identifiée</strong>
+        <p>Au-delà de 200 utilisateurs concurrents, il faudra ajouter un index PostgreSQL sur la colonne <code>categoryId</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. La Suite de Régression -->
+  <div class="card">
+    <h2>3. Stratégie de Non-Régression Automatisée</h2>
+    <p style="font-size: 0.9rem; color: var(--muted);">
+      Une fois tous ces tests écrits, ils forment notre <strong>suite de régression</strong> : à chaque modification du code par un développeur, ces tests sont relancés automatiquement (dans Jenkins / GitHub Actions). Si un développeur casse une règle, le test devient rouge immédiatement !
+    </p>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

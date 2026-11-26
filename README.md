@@ -4,7 +4,7 @@ A full-stack, enterprise-grade web application built to fulfill all DevOps and S
 
 ---
 
-## Project Requirements Checklist just test éaa git add
+## Project Requirements Checklist
 
 | Lot / Requirement | Implementation Details | Status |
 | :--- | :--- | :---: |
@@ -206,4 +206,13 @@ npm run test:cov
 
 # Run linter verification
 npm run lint
+
+# Run Playwright E2E interface tests (Headless)
+npm run test:playwright
+
+# Run Playwright tests with interactive UI
+npm run test:playwright:ui
+
+# View HTML test execution report
+npm run test:playwright:report
 ```

@@ -26,9 +26,10 @@ import {
   ApiResponse,
   ApiSecurity,
 } from '@nestjs/swagger';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('/api/products')
-//@SkipThrottle()
+@SkipThrottle({ short: true, medium: true, long: true, default: true })
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
