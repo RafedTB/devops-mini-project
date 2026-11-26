@@ -1,8 +1,7 @@
-import { IsNotEmpty, IsEmail, MaxLength, IsOptional } from "class-validator";
+import { IsNotEmpty, IsEmail, MaxLength } from 'class-validator';
 export class ForgotPasswordDto {
-
-    @IsEmail()
-    @MaxLength(50)
-    @IsNotEmpty()
-    email: string = '';
+  @IsEmail()
+  @MaxLength(50)
+  @IsNotEmpty()
+  email: string = '';
 }

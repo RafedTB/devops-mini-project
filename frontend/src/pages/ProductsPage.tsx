@@ -166,10 +166,58 @@ export default function ProductsPage() {
 
   const isAdmin = user?.userType === 'admin';
 
+  const [priceFilter, setPriceFilter] = useState<'all' | 'under50' | '50to100' | 'over100'>('all');
+
+  const filteredProducts = products.filter((p) => {
+    const price = Number(p.price);
+    if (priceFilter === 'under50') return price < 50;
+    if (priceFilter === '50to100') return price >= 50 && price <= 100;
+    if (priceFilter === 'over100') return price > 100;
+    return true;
+  });
+
   return (
-    <div>
+    <div className="store-catalog-wrapper">
+      {/* E-Commerce Hero Showcase */}
+      <section className="store-hero-banner">
+        <div className="hero-content">
+          <span className="hero-tag">Official Tech &amp; Developer Catalog</span>
+          <h1 className="hero-heading">Engineered for Performance &amp; Productivity</h1>
+          <p className="hero-subtext">
+            Explore authentic developer hardware, workspace essentials, and premium accessories with verified reviews and instant delivery.
+          </p>
+          <div className="hero-perks">
+            <div className="hero-perk-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="3" width="15" height="13" />
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                <circle cx="5.5" cy="18.5" r="2.5" />
+                <circle cx="18.5" cy="18.5" r="2.5" />
+              </svg>
+              <span>Free Shipping Over $50</span>
+            </div>
+            <div className="hero-perk-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span>2-Year Warranty</span>
+            </div>
+            <div className="hero-perk-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+              <span>30-Day Money Back</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="page-header">
-        <h2>Products</h2>
+        <div>
+          <h2>Products</h2>
+          <p className="catalog-count-label">Showing {filteredProducts.length} of {products.length} products</p>
+        </div>
         {isAdmin && (
           <button className="btn btn-primary" onClick={() => setShowForm(!showForm)}>
             {showForm ? 'Cancel' : '+ New Product'}
@@ -177,15 +225,48 @@ export default function ProductsPage() {
         )}
       </div>
 
-      <form onSubmit={handleSearch} className="search-bar">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button type="submit" className="btn btn-secondary">Search</button>
-      </form>
+      <div className="catalog-toolbar">
+        <form onSubmit={handleSearch} className="search-bar">
+          <input
+            type="text"
+            placeholder="Search products by title or keywords..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <button type="submit" className="btn btn-secondary">Search</button>
+        </form>
+
+        <div className="filter-chips">
+          <button
+            type="button"
+            className={`filter-chip ${priceFilter === 'all' ? 'active' : ''}`}
+            onClick={() => setPriceFilter('all')}
+          >
+            All Prices
+          </button>
+          <button
+            type="button"
+            className={`filter-chip ${priceFilter === 'under50' ? 'active' : ''}`}
+            onClick={() => setPriceFilter('under50')}
+          >
+            Under $50
+          </button>
+          <button
+            type="button"
+            className={`filter-chip ${priceFilter === '50to100' ? 'active' : ''}`}
+            onClick={() => setPriceFilter('50to100')}
+          >
+            $50 &ndash; $100
+          </button>
+          <button
+            type="button"
+            className={`filter-chip ${priceFilter === 'over100' ? 'active' : ''}`}
+            onClick={() => setPriceFilter('over100')}
+          >
+            $100+
+          </button>
+        </div>
+      </div>
 
       {showForm && isAdmin && (
         <div className="form-container" style={{ marginBottom: '1.5rem' }}>
@@ -204,12 +285,26 @@ export default function ProductsPage() {
       )}
 
       {loading ? (
-        <p className="loading-text">Loading products...</p>
-      ) : products.length === 0 ? (
-        <p>No products found.</p>
+        <p className="loading-text">Loading catalog products...</p>
+      ) : filteredProducts.length === 0 ? (
+        <div className="empty-state-card">
+          <h3>No products match your criteria</h3>
+          <p>Try adjusting your search terms or clearing the active filters.</p>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => {
+              setSearch('');
+              setPriceFilter('all');
+              fetchProducts();
+            }}
+          >
+            Reset Filters
+          </button>
+        </div>
       ) : (
         <div className="product-grid">
-          {products.map((p) =>
+          {filteredProducts.map((p) =>
             editId === p.id ? (
               <div key={p.id} className="product-card">
                 <form onSubmit={handleEdit}>
@@ -224,6 +319,14 @@ export default function ProductsPage() {
               </div>
             ) : (
               <div key={p.id} className="product-card">
+                <div className="product-card-preview">
+                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="product-card-icon">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                  <span className="product-badge-catalog">In Stock</span>
+                </div>
                 <div className="card-top-row">
                   <h3><Link to={`/products/${p.id}`}>{p.name}</Link></h3>
                   <button

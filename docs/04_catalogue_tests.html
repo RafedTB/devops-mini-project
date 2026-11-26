@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 4 : Conception des Tests & Catalogue des 15 Cas - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 04 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="03_exigences_matrice.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="05_transitions_etat_exploratoire.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 04 / 10</span>
+    <h1>Étape 4 : Conception des Tests & Catalogue des 15 Cas</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Application systématique des techniques formelles de test ISTQB : partitions d'équivalence, analyse des valeurs limites (BVA) et tables de décision. Consolidation d'un catalogue de 15 cas de test couvrant les cas nominaux, limites et négatifs.
+    </div>
+  </div>
+
+  <!-- 1. Les 3 Techniques Clés -->
+  <div class="card">
+    <h2>1. Techniques de Conception de Tests (ISTQB)</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>1. Partitions d'Équivalence (EP)</strong>
+        <p>Au lieu de tester 1 000 valeurs, on découpe en groupes :<br>
+        • Classe invalide : notes &lt; 1<br>
+        • Classe valide : notes de [1 à 5]<br>
+        • Classe invalide : notes &gt; 5
+        </p>
+      </div>
+      <div class="box">
+        <strong>2. Valeurs Limites (BVA)</strong>
+        <p>Les bugs se trouvent presque toujours aux frontières !<br>
+        • Limite basse : on teste <code>0</code> (rejeté) et <code>1</code> (accepté).<br>
+        • Limite haute : on teste <code>5</code> (accepté) et <code>6</code> (rejeté).
+        </p>
+      </div>
+      <div class="box">
+        <strong>3. Table de Décision</strong>
+        <p>Vérifie les combinaisons :<br>
+        Si l'utilisateur est <code>admin</code> &rarr; création produit autorisée (201).<br>
+        Si l'utilisateur est <code>user</code> &rarr; création produit refusée (403).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Catalogue de 15 cas de test -->
+  <div class="card">
+    <h2>2. Catalogue Consolidé des 15 Cas de Test</h2>
+    <p style="font-size: 0.88rem; color: var(--muted); margin-bottom: 0.8rem;">
+      Exigence du sujet respectée : au moins 15 cas couvrant l'authentification, les produits, les avis et les commandes.
+    </p>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Module</th>
+            <th>Type</th>
+            <th>Description du Test</th>
+            <th>Données de Test</th>
+            <th>Résultat Attendu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Auth -->
+          <tr>
+            <td><strong>TC-01</strong></td>
+            <td>Auth</td>
+            <td><span class="badge badge-pos">Positif</span></td>
+            <td>Inscription avec email valide et MDP valide</td>
+            <td><code>test@univ.tn</code> / <code>Secret123</code></td>
+            <td>Compte créé (HTTP 201)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-02</strong></td>
+            <td>Auth</td>
+            <td><span class="badge badge-neg">Négatif</span></td>
+            <td>Inscription avec un email déjà existant</td>
+            <td><code>test@univ.tn</code> (déjà présent)</td>
+            <td>Erreur 400 ou 409 (Email déjà pris)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-03</strong></td>
+            <td>Auth</td>
+            <td><span class="badge badge-bva">Limite</span></td>
+            <td>Mot de passe trop court (&lt; 6 caractères)</td>
+            <td><code>abcde</code> (5 caractères)</td>
+            <td>Erreur 400 (Longueur min = 6)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-04</strong></td>
+            <td>Auth</td>
+            <td><span class="badge badge-pos">Positif</span></td>
+            <td>Connexion réussie avec bons identifiants</td>
+            <td>Bons email et mot de passe</td>
+            <td>Succès (HTTP 200) + Token JWT valide</td>
+          </tr>
+          <tr>
+            <td><strong>TC-05</strong></td>
+            <td>Auth</td>
+            <td><span class="badge badge-neg">Négatif</span></td>
+            <td>Connexion avec mauvais mot de passe</td>
+            <td>Bon email + <code>FauxPass123</code></td>
+            <td>Erreur 401 Unauthorized</td>
+          </tr>
+
+          <!-- Produits -->
+          <tr>
+            <td><strong>TC-06</strong></td>
+            <td>Produits</td>
+            <td><span class="badge badge-pos">Positif</span></td>
+            <td>Admin crée un produit standard</td>
+            <td>Nom: "Souris Pro", Prix: 25.00€</td>
+            <td>Produit créé (HTTP 201)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-07</strong></td>
+            <td>Produits</td>
+            <td><span class="badge badge-neg">Négatif</span></td>
+            <td>Utilisateur simple tente de créer un produit</td>
+            <td>Token avec rôle <code>user</code></td>
+            <td>Erreur 403 Forbidden</td>
+          </tr>
+          <tr>
+            <td><strong>TC-08</strong></td>
+            <td>Produits</td>
+            <td><span class="badge badge-bva">Limite</span></td>
+            <td>Création avec prix à zéro (gratuit)</td>
+            <td>Prix: <code>0.00€</code></td>
+            <td>Produit créé (HTTP 201, autorisé)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-09</strong></td>
+            <td>Produits</td>
+            <td><span class="badge badge-bva">Limite</span></td>
+            <td>Création avec un prix négatif</td>
+            <td>Prix: <code>-0.01€</code> ou <code>-10€</code></td>
+            <td>Erreur 400 Bad Request</td>
+          </tr>
+          <tr>
+            <td><strong>TC-10</strong></td>
+            <td>Produits</td>
+            <td><span class="badge badge-bva">Limite</span></td>
+            <td>Nom de produit trop court (&lt; 3 caractères)</td>
+            <td>Nom: <code>"AB"</code> (2 lettres)</td>
+            <td>Erreur 400 (Min 3 caractères)</td>
+          </tr>
+
+          <!-- Avis -->
+          <tr>
+            <td><strong>TC-11</strong></td>
+            <td>Avis</td>
+            <td><span class="badge badge-pos">Positif</span></td>
+            <td>Client poste un avis nominal avec note 4</td>
+            <td>Note: 4, Commentaire: "Très bon"</td>
+            <td>Avis enregistré (HTTP 201)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-12</strong></td>
+            <td>Avis</td>
+            <td><span class="badge badge-bva">Limite</span></td>
+            <td>Note inférieure à la limite minimale (0 étoile)</td>
+            <td>Note: <code>0</code></td>
+            <td>Erreur 400 (Min 1 étoile)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-13</strong></td>
+            <td>Avis</td>
+            <td><span class="badge badge-bva">Limite</span></td>
+            <td>Note supérieure à la limite maximale (6 étoiles)</td>
+            <td>Note: <code>6</code></td>
+            <td>Erreur 400 (Max 5 étoiles)</td>
+          </tr>
+          <tr>
+            <td><strong>TC-14</strong></td>
+            <td>Avis</td>
+            <td><span class="badge badge-neg">Négatif</span></td>
+            <td>Utilisateur tente de supprimer l'avis d'autrui</td>
+            <td>User A tente DELETE avis de User B</td>
+            <td>Erreur 403 Forbidden</td>
+          </tr>
+
+          <!-- Commandes -->
+          <tr>
+            <td><strong>TC-15</strong></td>
+            <td>Commandes</td>
+            <td><span class="badge badge-neg">Négatif</span></td>
+            <td>Passer une commande avec un panier vide</td>
+            <td>Panier: <code>[]</code> (0 article)</td>
+            <td>Erreur 400 (Au moins 1 article requis)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. Jeux de Données de Test -->
+  <div class="card">
+    <h2>3. Jeux de Données et Fixtures de Test</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>Comptes Utilisateurs Pré-enregistrés</strong>
+        <p>• Admin : <code>admin@nestlearn.com</code> (Rôle admin)<br>
+        • Client 1 : <code>client1@nestlearn.com</code> (Rôle user)<br>
+        • Client 2 : <code>client2@nestlearn.com</code> (Rôle user)
+        </p>
+      </div>
+      <div class="box">
+        <strong>Produits Pré-enregistrés</strong>
+        <p>• Produit ID 1 : "Laptop Pro" (Prix: 899.99€)<br>
+        • Produit ID 2 : "Clavier Mécanique" (Prix: 45.00€)<br>
+        • Produit ID 3 : "Guide PDF Gratuit" (Prix: 0.00€)
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

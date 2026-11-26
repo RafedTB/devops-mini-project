@@ -16,6 +16,13 @@ export default function CartPage() {
   const [postalCode, setPostalCode] = useState('');
   const [phone, setPhone] = useState('');
 
+  // Sync fullName when user profile loads asynchronously
+  React.useEffect(() => {
+    if (user?.username && !fullName) {
+      setFullName(user.username);
+    }
+  }, [user]);
+
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);

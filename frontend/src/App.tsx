@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage';
 import WishlistPage from './pages/WishlistPage';
 import CartPage from './pages/CartPage';
 import OrdersPage from './pages/OrdersPage';
+import Footer from './Footer';
 import './App.css';
 
 function GuestRoute({ children }: { children: React.ReactNode }) {
@@ -80,6 +81,7 @@ function App() {
               <Route path="/products/:id" element={<ProductDetailPage />} />
             </Routes>
           </main>
+          <Footer />
         </CartProvider>
       </AuthProvider>
     </BrowserRouter>

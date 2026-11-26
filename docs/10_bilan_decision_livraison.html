@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 10 : Bilan de Campagne & Décision de Livraison - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 10 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="09_interface_non_fonctionnel.html" class="doc-nav-btn">&larr; Précédent</a>
+      <span class="doc-nav-btn primary" style="opacity: 0.4; pointer-events: none;">Suivant &rarr;</span>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 10 / 10</span>
+    <h1>Étape 10 : Bilan de Campagne & Décision de Livraison</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Synthèse d'achèvement de la campagne de qualification, bilan consolidé des anomalies et analyse de conformité vis-à-vis des critères de sortie. Formulation de l'avis formel d'autorisation de mise en production.
+    </div>
+  </div>
+
+  <!-- 1. Décision Finale Affirmée -->
+  <div class="decision-banner">
+    <div class="decision-title" style="color: #059669; font-weight: 800; font-size: 1.25rem;">DÉCISION OFFICIELLE : AVIS FAVORABLE À LA LIVRAISON</div>
+    <div class="decision-desc">
+      L'application <strong>NestLearn</strong> satisfait l'intégralité des critères de sortie fixés au plan de test (Étape 2). Aucun défaut bloquant résiduel n'est connu. L'application est déclarée apte au déploiement opérationnel.
+    </div>
+  </div>
+
+  <!-- 2. Comparaison Critères de Sortie -->
+  <div class="card">
+    <h2>1. Évaluation des Critères de Sortie de Campagne</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Indicateur Qualité</th>
+            <th>Seuil Exigé (Plan de test)</th>
+            <th>Valeur Atteinte Réelle</th>
+            <th>Conformité</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Taux de succès des tests</strong></td>
+            <td>&ge; 95%</td>
+            <td><strong>98.6%</strong> (71 passants / 72 tests)</td>
+            <td><span class="badge-fixed">CONFORME</span></td>
+          </tr>
+          <tr>
+            <td><strong>Couverture de code unitaire</strong></td>
+            <td>&ge; 75%</td>
+            <td><strong>83.8%</strong> (sur les services métier)</td>
+            <td><span class="badge-fixed">CONFORME</span></td>
+          </tr>
+          <tr>
+            <td><strong>Anomalies Bloquantes ouvertes</strong></td>
+            <td>0</td>
+            <td><strong>0</strong> (Aucun blocage)</td>
+            <td><span class="badge-fixed">CONFORME</span></td>
+          </tr>
+          <tr>
+            <td><strong>Anomalies Majeures ouvertes</strong></td>
+            <td>0</td>
+            <td><strong>0</strong> (Corrigées ou contournées)</td>
+            <td><span class="badge-fixed">CONFORME</span></td>
+          </tr>
+          <tr>
+            <td><strong>Performance temps p95</strong></td>
+            <td>&lt; 500 ms</td>
+            <td><strong>238 ms</strong> sous 20 utilisateurs</td>
+            <td><span class="badge-fixed">CONFORME</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. Registre des Anomalies Consolidé -->
+  <div class="card">
+    <h2>2. Registre Consolidé des Anomalies et Traitement</h2>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID Bug</th>
+            <th>Titre de l'Anomalie</th>
+            <th>Sévérité</th>
+            <th>Action Corrective Réalisée</th>
+            <th>État Final</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>BUG-01</strong></td>
+            <td>Double clic possible lors de la soumission d'avis</td>
+            <td>Moyenne</td>
+            <td>Ajout d'un état <code>isSubmitting=true</code> qui désactive le bouton dans React.</td>
+            <td><span class="badge-fixed">CORRIGÉ &amp; VÉRIFIÉ</span></td>
+          </tr>
+          <tr>
+            <td><strong>BUG-02</strong></td>
+            <td>Crash 500 si un prix textuel est envoyé à l'API</td>
+            <td>Élevée</td>
+            <td>Ajout du décorateur <code>@IsNumber()</code> dans <code>create-product.dto.ts</code> (renvoie 400).</td>
+            <td><span class="badge-fixed">CORRIGÉ &amp; VÉRIFIÉ</span></td>
+          </tr>
+          <tr>
+            <td><strong>BUG-03</strong></td>
+            <td>Légère latence sur les images volumineuses d'avatar</td>
+            <td>Faible</td>
+            <td>Mise en place d'une limite de taille de 2 Mo avec message d'alerte.</td>
+            <td><span class="badge-workaround">CONTOURNÉ</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 4. Risques Résiduels & Recommandations -->
+  <div class="card">
+    <h2>3. Risques Résiduels et Recommandations de Mise en Production</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>Risque Résiduel Faible</strong>
+        <p>En cas de coupure réseau brutale pendant l'upload d'un gros fichier, le serveur doit nettoyer les fichiers temporaires orphelins (tâche cron recommandée).</p>
+      </div>
+      <div class="box">
+        <strong>Recommandation Version 2</strong>
+        <p>Intégrer les tests Playwright dans la pipeline Jenkins automatique à chaque Pull Request pour interdire toute régression visuelle.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

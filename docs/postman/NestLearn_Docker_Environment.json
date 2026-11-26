@@ -1,0 +1,49 @@
+{
+  "id": "e1f2a3b4-5678-90ab-cdef-1234567890ab",
+  "name": "NestLearn Docker Environment",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "frontendUrl",
+      "value": "http://localhost:80",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "userToken",
+      "value": "",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "createdProductId",
+      "value": "118",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "createdReviewId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "createdOrderId",
+      "value": "1",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

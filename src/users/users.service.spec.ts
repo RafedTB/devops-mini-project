@@ -3,7 +3,11 @@ import { usersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { AuthProvider } from './auth.provider';
-import { NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
+import {
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserType } from '../utils/enum';
 
 describe('UsersService', () => {
@@ -65,12 +69,16 @@ describe('UsersService', () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
       const result = await service.getCurrentUser(1);
       expect(result).toEqual(mockUser);
-      expect(mockUserRepository.findOne).toHaveBeenCalledWith({ where: { id: 1 } });
+      expect(mockUserRepository.findOne).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
     });
 
     it('should throw NotFoundException if user not found', async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      await expect(service.getCurrentUser(99)).rejects.toThrow(NotFoundException);
+      await expect(service.getCurrentUser(99)).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -85,29 +93,42 @@ describe('UsersService', () => {
   describe('updateUser', () => {
     it('should update username and password', async () => {
       mockUserRepository.findOne.mockResolvedValue({ ...mockUser });
-      const result = await service.updateUser(1, { username: 'newname', password: 'newpassword123' });
+      const result = await service.updateUser(1, {
+        username: 'newname',
+        password: 'newpassword123',
+      });
       expect(result.username).toBe('newname');
-      expect(mockAuthProvider.HashPassword).toHaveBeenCalledWith('newpassword123');
+      expect(mockAuthProvider.HashPassword).toHaveBeenCalledWith(
+        'newpassword123',
+      );
       expect(mockUserRepository.save).toHaveBeenCalled();
     });
 
     it('should throw NotFoundException if user not found', async () => {
       mockUserRepository.findOne.mockResolvedValue(null);
-      await expect(service.updateUser(99, { username: 'test' })).rejects.toThrow(NotFoundException);
+      await expect(
+        service.updateUser(99, { username: 'test' }),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 
   describe('deleteUser', () => {
     it('should allow user to delete their own account', async () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
-      const result = await service.deleteUser(1, { id: 1, userType: UserType.USER });
+      const result = await service.deleteUser(1, {
+        id: 1,
+        userType: UserType.USER,
+      });
       expect(result).toEqual({ message: 'User deleted successfully' });
       expect(mockUserRepository.remove).toHaveBeenCalled();
     });
 
     it('should allow admin to delete another user account', async () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
-      const result = await service.deleteUser(1, { id: 2, userType: UserType.ADMIN });
+      const result = await service.deleteUser(1, {
+        id: 2,
+        userType: UserType.ADMIN,
+      });
       expect(result).toEqual({ message: 'User deleted successfully' });
       expect(mockUserRepository.remove).toHaveBeenCalled();
     });
@@ -115,7 +136,7 @@ describe('UsersService', () => {
     it('should forbid non-admin from deleting another user account', async () => {
       mockUserRepository.findOne.mockResolvedValue(mockUser);
       await expect(
-        service.deleteUser(1, { id: 2, userType: UserType.USER })
+        service.deleteUser(1, { id: 2, userType: UserType.USER }),
       ).rejects.toThrow(ForbiddenException);
     });
   });
@@ -131,7 +152,10 @@ describe('UsersService', () => {
       const result = await service.verifyAccount(1, 'token123');
       expect(result).toEqual({ message: 'Account verified successfully' });
       expect(mockUserRepository.save).toHaveBeenCalledWith(
-        expect.objectContaining({ isAccountVerified: true, verificationToken: null })
+        expect.objectContaining({
+          isAccountVerified: true,
+          verificationToken: null,
+        }),
       );
     });
 
@@ -141,8 +165,9 @@ describe('UsersService', () => {
         verificationToken: 'token123',
       });
 
-      await expect(service.verifyAccount(1, 'wrongtoken')).rejects.toThrow(BadRequestException);
+      await expect(service.verifyAccount(1, 'wrongtoken')).rejects.toThrow(
+        BadRequestException,
+      );
     });
   });
 });
-

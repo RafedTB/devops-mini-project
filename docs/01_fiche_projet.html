@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 1 : Fiche Projet & Analyse des Risques - NestLearn</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 01 / 10</div>
+    <div class="doc-nav-steps">
+      <span class="doc-nav-btn" style="opacity: 0.4; pointer-events: none;">&larr; Précédent</span>
+      <a href="02_plan_de_test.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 01 / 10</span>
+    <h1>Étape 1 : Fiche Projet & Analyse des Risques</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Le projet NestLearn (plateforme e-commerce et gestion d'avis clients) constitue le socle applicatif de la démarche. Ce livrable définit le périmètre d'homologation (authentification JWT, catalogue produits, avis et notations de 1 à 5 étoiles) ainsi que l'analyse préventive des risques qualité majeurs selon les normes ISTQB.
+    </div>
+  </div>
+
+  <!-- 1. Ce qu'on teste -->
+  <div class="card">
+    <h2>1. Architecture de l'Application Testée</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>1. Frontend (Interface)</strong>
+        <p>Site Web en <strong>React</strong> où l'utilisateur se connecte, regarde le catalogue et laisse un avis.</p>
+      </div>
+      <div class="box">
+        <strong>2. Backend (API)</strong>
+        <p>Serveur en <strong>NestJS</strong> qui applique les règles de sécurité et les calculs.</p>
+      </div>
+      <div class="box">
+        <strong>3. Base de données</strong>
+        <p>Base <strong>PostgreSQL</strong> qui stocke les utilisateurs, les produits et les avis.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Les Règles Clés -->
+  <div class="card">
+    <h2>2. Règles Métier de Référence</h2>
+    <ul>
+      <li><strong>Comptes :</strong> Un email doit être unique et valide. Mot de passe $\ge 6$ caractères. Deux rôles : <code>user</code> (client) et <code>admin</code>.</li>
+      <li><strong>Produits :</strong> Seul un <code>admin</code> peut créer ou supprimer un produit. Le prix doit être positif ($\ge 0$).</li>
+      <li><strong>Avis &amp; Notes :</strong> La note doit être comprise <strong>entre 1 et 5 étoiles</strong>. Un utilisateur ne peut modifier que ses propres avis.</li>
+      <li><strong>Sécurité :</strong> Un simple utilisateur ne doit JAMAIS pouvoir accéder aux routes de l'administrateur.</li>
+    </ul>
+  </div>
+
+  <!-- 3. Périmètre -->
+  <div class="card">
+    <h2>3. Périmètre des Tests (In-Scope vs Out-Scope)</h2>
+    <div class="scope-grid">
+      <div class="in-box">
+        <h3>Périmètre Inclus (In-Scope)</h3>
+        <ul>
+          <li>La connexion / déconnexion (login)</li>
+          <li>Les droits d'accès (user vs admin)</li>
+          <li>L'ajout de produit et le dépôt d'avis</li>
+          <li>Les erreurs quand on envoie des mauvaises données</li>
+          <li>La sauvegarde en base de données</li>
+        </ul>
+      </div>
+      <div class="out-box">
+        <h3>Périmètre Exclu (Out-Scope)</h3>
+        <ul>
+          <li>Les vrais paiements bancaires (pas de vraie carte)</li>
+          <li>L'envoi réel de milliers d'emails sur internet</li>
+          <li>Les vieux navigateurs d'il y a 15 ans</li>
+          <li>Les attaques de hackers de haut niveau</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Les 4 Définitions Clés -->
+  <div class="card">
+    <h2>4. Définitions Clés ISTQB</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>1. Erreur</strong>
+        <p>La faute commise par le développeur (ex : il oublie de vérifier la note).</p>
+      </div>
+      <div class="box">
+        <strong>2. Défaut (Bug)</strong>
+        <p>Le problème dans le code (ex : le code accepte une note de 10 étoiles).</p>
+      </div>
+      <div class="box">
+        <strong>3. Défaillance</strong>
+        <p>Ce que l'utilisateur voit (ex : le site plante ou affiche une fausse moyenne).</p>
+      </div>
+      <div class="box">
+        <strong>4. Vérification vs Validation</strong>
+        <p><strong>Vérification :</strong> <em>« Le code respecte-t-il la consigne ? »</em><br><strong>Validation :</strong> <em>« Le logiciel sert-il vraiment à l'utilisateur ? »</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Les Risques -->
+  <div class="card">
+    <h2>5. Matrice des Risques Qualité Majeurs</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Risque / Bug possible</th>
+          <th>Pourquoi c'est grave ?</th>
+          <th>Criticité</th>
+          <th>Comment on le teste ?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Piratage de rôle (Bypass)</strong></td>
+          <td>Un simple client devient admin ou supprime les avis des autres.</td>
+          <td><span class="badge badge-red">Élevé</span></td>
+          <td>Tester l'API avec un faux compte pour vérifier qu'on reçoit une erreur 403 (Interdit).</td>
+        </tr>
+        <tr>
+          <td><strong>Note invalide (ex: -1 ou 10)</strong></td>
+          <td>Fausse toutes les moyennes d'avis sur les produits.</td>
+          <td><span class="badge badge-red">Élevé</span></td>
+          <td>Tester avec 0, 6, et des textes pour voir si le backend refuse.</td>
+        </tr>
+        <tr>
+          <td><strong>Prix négatif (ex: -20€)</strong></td>
+          <td>L'utilisateur achète gratuitement ou gagne de l'argent.</td>
+          <td><span class="badge badge-amber">Moyen</span></td>
+          <td>Tester l'envoi d'un prix de -10€ pour vérifier le rejet.</td>
+        </tr>
+        <tr>
+          <td><strong>Suppression orpheline</strong></td>
+          <td>Si on supprime un produit, les avis restent seuls et font crasher l'appli.</td>
+          <td><span class="badge badge-amber">Moyen</span></td>
+          <td>Vérifier en base de données les relations de clés étrangères.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>

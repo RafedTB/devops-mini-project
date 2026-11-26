@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Étape 2 : Plan de Test & Stratégie Globale - NestLearn</title>
+  <link rel="stylesheet" href="style.css"><style>
+    /* Visualisation pyramide des tests */
+    .pyr-level { padding: 0.75rem 1.25rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; color: #fff; font-weight: 600; font-size: 0.9rem; }
+    .pyr-5 { background-color: #be123c; width: 60%; margin: 0 auto; }
+    .pyr-4 { background-color: #c2410c; width: 70%; margin: 0 auto; }
+    .pyr-3 { background-color: #b45309; width: 80%; margin: 0 auto; }
+    .pyr-2 { background-color: #0369a1; width: 90%; margin: 0 auto; }
+    .pyr-1 { background-color: #15803d; width: 100%; }
+    .pyr-tool { background-color: rgba(0,0,0,0.25); font-size: 0.78rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<header class="doc-nav-wrapper">
+  <div class="doc-nav-inner">
+    <a href="index.html" class="doc-nav-home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Sommaire du Dossier</span>
+    </a>
+    <div class="doc-nav-indicator">Étape 02 / 10</div>
+    <div class="doc-nav-steps">
+      <a href="01_fiche_projet.html" class="doc-nav-btn">&larr; Précédent</a>
+      <a href="03_exigences_matrice.html" class="doc-nav-btn primary">Suivant &rarr;</a>
+    </div>
+  </div>
+</header>
+
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="banner">
+    <span class="banner-badge">Livrable Académique &bull; Étape 02 / 10</span>
+    <h1>Étape 2 : Plan de Test & Stratégie Globale</h1>
+    <p>Atelier Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information</p>
+  </div>
+
+  <!-- How to explain to teacher -->
+  <div class="academic-context-box">
+    <div class="context-header">Cadrage Méthodologique &amp; Objectifs du Livrable</div>
+    <div class="context-body">
+      Cette étape formalise la stratégie globale de test en s'appuyant sur la pyramide des tests, l'isolation rigoureuse des environnements (développement, test, production via Docker) et la définition explicite des critères d'entrée et de sortie de campagne.
+    </div>
+  </div>
+
+  <!-- 1. La Pyramide des Tests -->
+  <div class="card">
+    <h2>1. Stratégie Multi-Niveaux (Pyramide des Tests)</h2>
+    <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem;">
+      On commence par tester les briques de base (rapides), puis on monte jusqu'au vrai utilisateur :
+    </p>
+
+    <div class="pyramid-list">
+      <div class="pyr-level pyr-5">
+        <span>5. Performance</span>
+        <span class="pyr-tool">Outil : k6</span>
+      </div>
+      <div class="pyr-level pyr-4">
+        <span>4. Interface (E2E)</span>
+        <span class="pyr-tool">Outil : Playwright</span>
+      </div>
+      <div class="pyr-level pyr-3">
+        <span>3. API REST</span>
+        <span class="pyr-tool">Outil : Postman</span>
+      </div>
+      <div class="pyr-level pyr-2">
+        <span>2. Intégration &amp; BDD</span>
+        <span class="pyr-tool">Outil : Jest + PostgreSQL</span>
+      </div>
+      <div class="pyr-level pyr-1">
+        <span>1. Tests Unitaires</span>
+        <span class="pyr-tool">Outil : Jest</span>
+      </div>
+    </div>
+
+    <div class="grid" style="margin-top: 1rem;">
+      <div class="box">
+        <strong>1. Tests Unitaires</strong>
+        <p>On teste une seule fonction isolée dans le code. Exemple : est-ce que la note refuse 0 et 6 ?</p>
+      </div>
+      <div class="box">
+        <strong>2. Tests d'Intégration</strong>
+        <p>On teste si le serveur arrive à enregistrer et lire correctement dans la base de données PostgreSQL.</p>
+      </div>
+      <div class="box">
+        <strong>3. Tests API REST</strong>
+        <p>On envoie des requêtes HTTP (POST, GET) et on vérifie qu'on reçoit le bon code (200 OK, 401 Non autorisé).</p>
+      </div>
+      <div class="box">
+        <strong>4. Test E2E Interface</strong>
+        <p>Un robot ouvre le navigateur Chromium, remplit le formulaire de login et clique sur les boutons comme un humain.</p>
+      </div>
+      <div class="box">
+        <strong>5. Test de Performance</strong>
+        <p>On simule 20 personnes connectées en même temps pour vérifier que le site répond en moins de 0.5 seconde.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Les 3 Environnements -->
+  <div class="card">
+    <h2>2. Environnements de Test et Déploiement</h2>
+    <div class="grid">
+      <div class="box">
+        <strong>ENV 1 : Dev Local</strong>
+        <p>Pour écrire le code et tester vite sur son PC en direct.</p>
+      </div>
+      <div class="box">
+        <strong>ENV 2 : Test Automatique</strong>
+        <p>Utilise une base de données séparée (<code>devops_test</code>) pour ne pas polluer les vraies données.</p>
+      </div>
+      <div class="box">
+        <strong>ENV 3 : Docker Staging</strong>
+        <p>L'application complète tourne dans des conteneurs Docker (exactement comme en vrai).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Critères d'Entrée et de Sortie -->
+  <div class="card">
+    <h2>3. Critères d'Entrée et Critères de Sortie</h2>
+    <div class="crit-grid">
+      <div class="entry-box">
+        <h3>Critères d'Entrée (Entry Criteria)</h3>
+        <ul>
+          <li>Le projet compile sans aucune erreur (<code>npm run build</code>).</li>
+          <li>La base de données est accessible.</li>
+          <li>On a préparé des fausses données de test (seeders).</li>
+        </ul>
+      </div>
+
+      <div class="exit-box">
+        <h3>Critères de Sortie (Exit Criteria)</h3>
+        <ul>
+          <li><strong>Couverture de code :</strong> au moins 75% du backend testé.</li>
+          <li><strong>Zéro bug bloquant :</strong> aucun crash du serveur ou trou de sécurité.</li>
+          <li><strong>Succès des tests :</strong> au moins 95% des tests passent au vert.</li>
+          <li><strong>Vitesse :</strong> le site répond en moins de 0.5 seconde.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Quand arrête-t-on les tests ? -->
+  <div class="card">
+    <h2>4. Procédure de Suspension et Reprise des Tests</h2>
+    <ul>
+      <li><strong>Suspension (On fait pause) :</strong> Si le système de connexion plante totalement ou si la base de données ne répond plus, on arrête les tests immédiatement et on signale le problème.</li>
+      <li><strong>Reprise :</strong> Une fois le bug corrigé par un correctif, on rejoue d'abord le test du bug, puis on relance tous les tests pour vérifier qu'on n'a rien cassé d'autre.</li>
+    </ul>
+  </div>
+
+  <footer class="doc-footer">
+    Dossier de Test et Validation des Logiciels &bull; Licence 3 Technologies de l'Information &bull; NestLearn E-Commerce Platform
+  </footer>
+
+</div>
+
+</body>
+</html>
