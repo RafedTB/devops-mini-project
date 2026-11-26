@@ -36,7 +36,7 @@ The entire application stack is containerized using Docker and orchestrated with
 
 ### 2.1 Services Specification
 
-| Service | Container Name | Image / Build | Host Port : Container Port | Role / Details |
+| Service | Container Name | Image / Build | Host Port : Container Port | Role / Detailss |
 | :--- | :--- | :--- | :--- | :--- |
 | **Backend** | `nestlearn-backend` | Multi-stage Dockerfile | `3000:3000` | NestJS API, TypeORM, Swagger documentation |
 | **Frontend** | `nestlearn-frontend` | Multi-stage Nginx | `80:80` | React 19 + Vite SPA served via Nginx with SPA routing |
