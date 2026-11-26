@@ -41,7 +41,7 @@ Flow: `topic branch` → PR → `develop` → PR → `main`
 
 ```
 devops/course/
-├── src/                          # NestJS Backend API
+├── src/                          # NestJS Bagckend API
 │   ├── users/                    # Authentication, Roles & Profile Management
 │   ├── products/                 # Product Catalog & Management
 │   ├── reviews/                  # Reviews & Rating System
